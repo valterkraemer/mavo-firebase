@@ -2,6 +2,10 @@
 
 A Firebase backend plugin for [Mavo](https://mavo.io).
 
+## Examples
+
+[To-Do List](https://valterkraemer.github.io/mavo-firebase/examples/todo/)
+
 ## Setup mavo-firebase
 
 Add Firebase and initialize it in the `<head>` of your HTML file.
