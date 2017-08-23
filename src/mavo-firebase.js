@@ -155,7 +155,7 @@
   function parseJSON(obj) {
     try {
       return JSON.parse(obj);
-    } finally {
+    } catch(e) {
       // Avoid no-empty lint error
     }
   }
