@@ -47,12 +47,12 @@ Insert these values into the `firebase.initializeApp` in your app.
 
 To be able to read and write to the database we will make it public.
 
-**Warning:** After this step anyone can read or write to your database.
-
 ![5-go-to-database](assets/images/5-go-to-database.png "Go to database")
 
 ![6-go-to-rules](assets/images/6-go-to-rules.png "Go to rules")
 
 Set `.read` and `.write` to `true`. Remember to click "Publish".
+
+**Warning:** After this step anyone can read or write to your database.
 
 ![7-edit-rules](assets/images/7-edit-rules.png "Edit rules")
