@@ -53,6 +53,6 @@ To be able to read and write to the database we will make it public.
 
 Set `.read` and `.write` to `true`. Remember to click "Publish".
 
-**Warning:** After this step anyone can read or write to your database.
+**Warning:** After this step anyone can read and write to your database.
 
 ![7-edit-rules](assets/images/7-edit-rules.png "Edit rules")
