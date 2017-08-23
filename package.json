@@ -1,0 +1,7 @@
+{
+  "name": "mavo-firebase",
+  "version": "0.1.0",
+  "description": "Firebase plugin for Mavo",
+  "author": "Valter Kraemer",
+  "license": "MIT"
+}
