@@ -63,6 +63,6 @@ h1 {
 }
 
 /* Only show mavo bar if logged in */
-/*[mv-permissions~="login"] .mv-bar {
+[mv-permissions~="login"] .mv-bar {
   display: none;
-}*/
+}
