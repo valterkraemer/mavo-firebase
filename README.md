@@ -4,7 +4,8 @@ A Firebase backend plugin for [Mavo](https://mavo.io).
 
 ## Examples
 
-[To-Do List](https://valterkraemer.github.io/mavo-firebase/examples/todo/)
+- [To-Do List](https://valterkraemer.github.io/mavo-firebase/examples/todo/)
+- [Authentication (High score example)](https://valterkraemer.github.io/mavo-firebase/examples/authentication/)
 
 ## Setup mavo-firebase
 
