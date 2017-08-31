@@ -18,6 +18,12 @@ To set up Firebase to require authentication (with Google as sign-in method) fol
 
 ![2-sign-in-method-2](assets/images/2-sign-in-method-2.png "Sign in method 2")
 
+### Add authorized domains
+
+Add the domain(s) from where you are going to serve your site.
+
+![3-authorized-domains](assets/images/3-authorized-domains.png "Add authorized domains")
+
 ### Set database rules
 
 Set the database rules to only allow certain email to write, and allow everybody to read.
@@ -33,5 +39,5 @@ The Demo allows any logged in user to modify data.
 }
 ```
 
-![3-write-rules](assets/images/3-write-rules.png "Write rules")
+![4-write-rules](assets/images/4-write-rules.png "Write rules")
 
