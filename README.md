@@ -25,6 +25,22 @@ Add Firebase and initialize it in the `<head>` of your HTML file.
 
 Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.
 
+## Attributes
+
+| Attribute                            | Default                              | Description                             |
+|:------------------------------------ |:------------------------------------ |:--------------------------------------- |
+| `firebase-default-permissions`       | `"read login"`                       | Permissions for an unauthenticated user |
+| `firebase-authenticated-permissions` | `"read edit add delete save logout"` | Permission for an authenticated user    |
+
+E.g.
+```
+<main mv-app="todo"
+  mv-storage="firebase"
+  firebase-default-permissions="read edit save">
+
+  ...
+```
+
 ## Setup Firebase
 
 Login or signup at https://console.firebase.google.com

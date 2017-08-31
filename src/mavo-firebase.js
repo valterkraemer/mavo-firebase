@@ -9,7 +9,26 @@
       this.key = this.mavo.id;
       this.db = firebase.database().ref('mavo');
 
-      this.permissions.on(['read', 'edit', 'add', 'delete', 'save', 'login']);
+      this.fbPermissions = {
+        default: ['read', 'login'],
+        authenticated: ['read', 'edit', 'add', 'delete', 'save', 'logout']
+      };
+
+      var defaultPermissions = this.mavo.element.getAttribute('firebase-default-permissions');
+      if (defaultPermissions) {
+        this.fbPermissions.default = defaultPermissions.split(/\s+/);
+      } else if (defaultPermissions === '') {
+        this.fbPermissions.default = [];
+      }
+
+      var authPermissions = this.mavo.element.getAttribute('firebase-authenticated-permissions');
+      if (authPermissions) {
+        this.fbPermissions.authenticated = authPermissions.split(/\s+/);
+      } else if (authPermissions === '') {
+        this.fbPermissions.authenticated = [];
+      }
+
+      this.permissions.on(this.fbPermissions.default);
       this.storeIds = new Set();
 
       // Localstorage changes
@@ -33,7 +52,7 @@
           return;
         }
 
-        this.permissions.on(['read', 'edit', 'add', 'delete', 'save', 'logout']);
+        this.permissions.off(this.fbPermissions.default).on(this.fbPermissions.authenticated);
         this.user = {
           username: user.email,
           name: user.displayName,
@@ -43,7 +62,6 @@
       }, error => {
         this.mavo.error('Firebase: ' + error.message);
       });
-
     },
 
     load: function() {
@@ -125,6 +143,8 @@
     logout: function() {
       firebase.auth().signOut().then(() => {
         // Sign-out successful.
+        this.permissions.off(this.fbPermissions.authenticated).on(this.fbPermissions.default);
+
       }).catch((error) => {
         this.mavo.error('Firebase: ' + error.message);
       });
