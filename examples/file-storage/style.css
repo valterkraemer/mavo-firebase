@@ -4,27 +4,20 @@ body {
   text-align: center;
 }
 
-/* Background image */
-main:before {
-  content: "";
-  position: fixed;
-  background-image: url("bg.jpg");
-  background-size: cover;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  filter: blur(5px);
-  transform: scale(1.02);
-}
-
 h1 {
   color: white;
   text-shadow: 0 0 10px #666;
 }
 
 img {
-  max-width: 400px;
   max-height: 400px;
+  max-width: 400px;
+}
+
+video {
+  display: block;
+  margin: auto;
+  min-height: 30px;
+  min-width: 30px;
+  background-color: #EEE;
 }

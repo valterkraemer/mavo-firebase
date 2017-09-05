@@ -3,7 +3,8 @@
 <head>
   <title>File Storage</title>
 
-  <script src="/mavo.js"></script>
+  <!-- Custom Mavo version to support firebase file uploading -->
+  <script src="mavo.js"></script>
   <script src="http://localhost:35729/livereload.js"></script>
   <!--<script src="https://dev.mavo.io/dist/mavo.js"></script>-->
 
@@ -14,7 +15,14 @@
 
   <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
   <script type="text/javascript">
-    firebase.initializeApp();
+    firebase.initializeApp({
+      apiKey: 'AIzaSyC0ZpVmzrkQeXNgrKbQ81RzwW5uaK0eqy4',
+      authDomain: 'mavo-firebase-file-storage.firebaseapp.com',
+      databaseURL: 'https://mavo-firebase-file-storage.firebaseio.com',
+      projectId: 'mavo-firebase-file-storage',
+      storageBucket: 'mavo-firebase-file-storage.appspot.com',
+      messagingSenderId: '138628779635'
+    });
   </script>
 </head>
 <body>
@@ -23,11 +31,13 @@
     firebase-default-permissions="read edit save">
 
     <header>
-      <h1>Image of the day!</h1>
+      <h1>Image and video of the day!</h1>
     </header>
 
     <div class="container">
       <img src="http://via.placeholder.com/400x400" property="image">
+
+      <video autoplay property="video"></video>
     </div>
 
   </main>
