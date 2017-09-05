@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>File Storage</title>
+
+  <script src="/mavo.js"></script>
+  <script src="http://localhost:35729/livereload.js"></script>
+  <!--<script src="https://dev.mavo.io/dist/mavo.js"></script>-->
+
+  <link rel="stylesheet" href="https://dev.mavo.io/dist/mavo.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="../../src/mavo-firebase.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+  <script type="text/javascript">
+    firebase.initializeApp();
+  </script>
+</head>
+<body>
+  <main mv-app="todo"
+    mv-storage="firebase"
+    firebase-default-permissions="read edit save">
+
+    <header>
+      <h1>Image of the day!</h1>
+    </header>
+
+    <div class="container">
+      <img src="http://via.placeholder.com/400x400" property="image">
+    </div>
+
+  </main>
+
+</body>
+</html>

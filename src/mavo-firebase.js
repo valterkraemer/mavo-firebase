@@ -8,6 +8,7 @@
     constructor: function() {
       this.key = this.mavo.id;
       this.db = firebase.database().ref('mavo');
+      this.storage = firebase.storage().ref('mavo');
 
       this.fbPermissions = {
         default: ['read', 'login'],
@@ -165,6 +166,14 @@
 
       this.mavo.render(data);
       this.mavo.setUnsavedChanges(false);
+    },
+
+    upload: function(file) {
+      var ref = this.storage.child(`${file.name}-${Date.now()}`);
+
+      return ref.put(file).then(() => {
+        return ref.getDownloadURL();
+      });
     },
 
     static: {
