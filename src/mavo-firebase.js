@@ -8,7 +8,6 @@
     constructor: function() {
       this.key = this.mavo.id;
       this.db = firebase.database().ref('mavo');
-      this.storage = firebase.storage().ref('mavo');
 
       this.fbPermissions = {
         default: ['read', 'login'],
@@ -169,6 +168,8 @@
     },
 
     upload: function(file) {
+      this.storage = this.storage || firebase.storage().ref('mavo');
+
       var ref = this.storage.child(`${file.name}-${Date.now()}`);
 
       return ref.put(file).then(() => {
