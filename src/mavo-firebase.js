@@ -13,26 +13,12 @@
       this.statusChangesCallbacks = []
       this.changesCallbacks = []
 
-      this.fbPermissions = {
-        default: ['read', 'login'],
-        authenticated: ['read', 'edit', 'add', 'delete', 'save', 'logout']
+      this.defaultPermissions = {
+        unauthenticated: getPermissions(this.mavo.element.getAttribute('unauthenticated-permissions')) || ['read', 'login'],
+        authenticated: getPermissions(this.mavo.element.getAttribute('authenticated-permissions')) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
       }
 
-      let defaultPermissions = this.mavo.element.getAttribute('firebase-default-permissions')
-      if (defaultPermissions) {
-        this.fbPermissions.default = defaultPermissions.split(/\s+/)
-      } else if (defaultPermissions === '') {
-        this.fbPermissions.default = []
-      }
-
-      let authPermissions = this.mavo.element.getAttribute('firebase-authenticated-permissions')
-      if (authPermissions) {
-        this.fbPermissions.authenticated = authPermissions.split(/\s+/)
-      } else if (authPermissions === '') {
-        this.fbPermissions.authenticated = []
-      }
-
-      this.permissions.on(this.fbPermissions.default)
+      this.permissions.on(this.defaultPermissions.unauthenticated)
 
       // Firebase auth changes
       firebase.auth().onAuthStateChanged(user => {
@@ -40,7 +26,7 @@
           return
         }
 
-        this.permissions.off(this.fbPermissions.default).on(this.fbPermissions.authenticated)
+        this.permissions.off(this.defaultPermissions.unauthenticated).on(this.defaultPermissions.authenticated)
         this.user = {
           username: user.email,
           name: user.displayName,
@@ -49,6 +35,14 @@
       }, error => {
         this.mavo.error('Firebase: ' + error.message)
       })
+
+      function getPermissions (attr) {
+        if (attr) {
+          return attr.split(/\s+/)
+        } else if (attr === '') {
+          return []
+        }
+      }
     },
 
     onStatusChange: function (callback) {
@@ -138,7 +132,7 @@
     logout: function () {
       return firebase.auth().signOut().then(() => {
         // Sign-out successful.
-        this.permissions.off(this.fbPermissions.authenticated).on(this.fbPermissions.default)
+        this.permissions.off(this.defaultPermissions.authenticated).on(this.defaultPermissions.unauthenticated)
       }).catch((error) => {
         this.mavo.error('Firebase: ' + error.message)
       })
