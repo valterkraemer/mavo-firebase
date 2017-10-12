@@ -34,14 +34,14 @@ Check out the [Setup Firebase](#setup-firebase) section to find out how to set u
 
 | Attribute                            | Default                              | Description                             |
 |:------------------------------------ |:------------------------------------ |:--------------------------------------- |
-| `firebase-default-permissions`       | `"read login"`                       | Permissions for an unauthenticated user |
-| `firebase-authenticated-permissions` | `"read edit add delete save logout"` | Permission for an authenticated user    |
+| `authenticated-permissions`          | `"read login"`                       | Permissions for an unauthenticated user |
+| `unauthenticated-permissions`        | `"read edit add delete save logout"` | Permission for an authenticated user    |
 
 E.g.
 ```
 <main mv-app="todo"
   mv-storage="firebase"
-  firebase-default-permissions="read edit save">
+  unauthenticated-permissions="read edit save">
 
   ...
 ```
