@@ -7,6 +7,10 @@ A Firebase backend plugin for [Mavo](https://mavo.io).
 - To-Do List - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/todo/))
 - [Authentication (High score example)](https://github.com/valterkraemer/mavo-firebase/tree/master/examples/authentication) - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/authentication/))
 
+## Tip
+
+Also check out [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) for 4-way data-binding.
+
 ## Setup mavo-firebase
 
 Add Firebase and initialize it in the `<head>` of your HTML file.
