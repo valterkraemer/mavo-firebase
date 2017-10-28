@@ -1,4 +1,4 @@
-# High score example (Authentication)
+# High score (Authentication)
 
 ![preview](assets/images/preview.jpg "Preview")
 
@@ -10,9 +10,11 @@ The browser will probably block sign-in popup so you have to allow popups for do
 
 ## Setup Firebase
 
-To set up Firebase to require authentication (with Google as sign-in method) follow the following steps in [Firebase console](https://console.firebase.google.com).
+To set up Firebase to require authentication (with Google as sign-in method) follow the following steps.
 
 ### Set Google as sign-in method
+
+Open [Firebase console](https://console.firebase.google.com) and go to your project.
 
 ![1-sign-in-method-1](assets/images/1-sign-in-method-1.png "Sign in method 1")
 
