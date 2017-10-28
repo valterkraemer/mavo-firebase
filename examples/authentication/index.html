@@ -10,21 +10,14 @@
 
   <script src="../../../mavo-firebase/src/mavo-firebase.js"></script>
   <link rel="stylesheet" href="../../../mavo-examples/authentication/style.css">
-
-  <script type="text/javascript">
-    firebase.initializeApp({
-      apiKey: 'AIzaSyCgvCJA4m8Z4LmIBvF_uj4ARt6lOlnNYF8',
-      authDomain: 'mavo-firebase-authentication.firebaseapp.com',
-      databaseURL: 'https://mavo-firebase-authentication.firebaseio.com',
-      projectId: 'mavo-firebase-authentication',
-      storageBucket: 'mavo-firebase-authentication.appspot.com',
-      messagingSenderId: '700088612151'
-    });
-  </script>
 </head>
 <body>
-  <main mv-app="todo"
-    mv-storage="firebase">
+  <main mv-app="authentication"
+    mv-storage="https://mavo-firebase-authentication.firebaseio.com"
+    firebase-api-key="AIzaSyCgvCJA4m8Z4LmIBvF_uj4ARt6lOlnNYF8"
+    firebase-auth-domain="mavo-firebase-authentication.firebaseapp.com"
+    unauthenticated-permissions="read login"
+    mv-autosave="0.001">
 
     <header>
       <h1>Current high score</h1>
@@ -43,6 +36,8 @@
     </div>
 
   </main>
+
+  <!--<script src="http://localhost:35729/livereload.js"></script>-->
 
 </body>
 </html>

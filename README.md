@@ -2,49 +2,50 @@
 
 A Firebase backend plugin for [Mavo](https://mavo.io).
 
+Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that enables changes to be pushed from the server and offline support.
+
 ## Examples
 
-- To-Do List - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/todo/))
-- [Authentication (High score example)](https://github.com/valterkraemer/mavo-firebase/tree/master/examples/authentication) - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/authentication/))
+- [To-do list](https://github.com/valterkraemer/mavo-firebase/tree/master/examples/todo) - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/todo/))
+- [High score (Authentication)](https://github.com/valterkraemer/mavo-firebase/tree/master/examples/authentication) - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/authentication/))
 
-## Tip
+## Quick setup
 
-Also check out [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) for 4-way data-binding.
+Add Firebase and mavo-firebase to the `<head>` of your HTML file.
 
-## Setup mavo-firebase
-
-Add Firebase and initialize it in the `<head>` of your HTML file.
-
-    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
     <script src="path/to/mavo-firebase.js"></script>
-    <script>
-      firebase.initializeApp({
-        apiKey: '...',
-        authDomain: '...',
-        databaseURL: '...',
-        projectId: '...',
-        storageBucket: '...',
-        messagingSenderId: '...'
-      });
-    </script>
 
-Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.
+**Tip:** *Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.*
 
-## Attributes
+Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-key and `unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
 
-| Attribute                            | Default                              | Description                             |
-|:------------------------------------ |:------------------------------------ |:--------------------------------------- |
-| `authenticated-permissions`          | `"read login"`                       | Permissions for an unauthenticated user |
-| `unauthenticated-permissions`        | `"read edit add delete save logout"` | Permission for an authenticated user    |
-
-E.g.
 ```
 <main mv-app="todo"
-  mv-storage="firebase"
+  mv-storage="https://databaseName.firebaseio.com"
+  firebase-api-key="apiKey"
   unauthenticated-permissions="read edit save">
 
   ...
 ```
+
+## Attributes
+
+| Attribute                     | Description                             | Example                               |
+|:------------------------------|:--------------------------------------- |:------------------------------------- |
+| `mv-storage`                  | Database url (required)                 | `https://databaseName.firebaseio.com` |
+| `firebase-api-key`            | Api-key (required)                      | `AdsfgDGFf-asdfGFDdfsdf5A-4ASFDgfhdf` |
+| `firebase-auth-domain`        | Auth domain to enable login             | `projectId.firebaseapp.com`           |
+| `firebase-storage-bucket`     | Storage bucket to enable file uploading | `bucket.appspot.com`                  |
+
+#### Permission attributes
+
+| Attribute                     | Default                                 | Description                           |
+|:----------------------------- |:--------------------------------------- |:------------------------------------- |
+| `authenticated-permissions`   | `"read login"`                          | Permissions for unauthenticated users |
+| `unauthenticated-permissions` | `"read edit add delete save logout"`    | Permissions for authenticated users   |
+
+Your Mavo id will be used as name for the root object in database.
 
 ## Setup Firebase
 
@@ -58,7 +59,7 @@ Login or signup at https://console.firebase.google.com
 
 ### Get your project's config details
 
-Insert these values into the `firebase.initializeApp` in your app.
+Set the [attributes](#attributes) to the values from the config.
 
 ![3-add-firebase-to-your-web-app](assets/images/3-add-firebase-to-your-web-app.png "Add firebase to your web app")
 
@@ -66,7 +67,7 @@ Insert these values into the `firebase.initializeApp` in your app.
 
 ### Setup database rules
 
-To be able to read and write to the database we will make it public.
+We will make the database public so that we can read and write to it.
 
 ![5-go-to-database](assets/images/5-go-to-database.png "Go to database")
 

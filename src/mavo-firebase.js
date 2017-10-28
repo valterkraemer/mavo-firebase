@@ -6,19 +6,86 @@
   Mavo.Backend.register($.Class({
     extends: Mavo.Backend,
     id: 'Firebase',
-    constructor: function () {
-      this.key = this.mavo.id
-      this.db = firebase.database().ref('mavo')
-
+    constructor: function (databaseUrl) {
       this.statusChangesCallbacks = []
       this.changesCallbacks = []
 
+      let id = this.mavo.id || 'mavo'
+
+      // ATTRIBUTES
+
+      let apiKeyAttr = this.mavo.element.getAttribute('firebase-api-key')
+      let authDomainAttr = this.mavo.element.getAttribute('firebase-auth-domain')
+      let storageBucketAttr = this.mavo.element.getAttribute('firebase-storage-bucket')
+
+      let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('unauthenticated-permissions')
+      let authenticatedPermissionsAttr = this.mavo.element.getAttribute('authenticated-permissions')
+
+      // Require firebase-api-key attribute
+      if (!apiKeyAttr) {
+        // timeout is workaround for undefined error
+        setTimeout(() => {
+          this.mavo.error('Firebase: firebase-api-key attribute missing')
+        }, 0)
+        return
+      }
+
+      // PERMISSIONS
+
+      let authenticatedPermissions = getPermissions(authenticatedPermissionsAttr) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
+
+      // Use default permissions if unauthenticated-permissions isn't specified,
+      // permission 'firebase-auth-domain' has to be set if permission 'login' is used
+      let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
+      if (unauthenticatedPermissions) {
+        if (!authDomainAttr && unauthenticatedPermissions.includes('login')) {
+          setTimeout(() => {
+            this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
+          }, 0)
+          return
+        }
+      } else {
+        if (authDomainAttr) {
+          unauthenticatedPermissions = ['read', 'login']
+        } else {
+          unauthenticatedPermissions = ['read']
+        }
+      }
+
       this.defaultPermissions = {
-        unauthenticated: getPermissions(this.mavo.element.getAttribute('unauthenticated-permissions')) || ['read', 'login'],
-        authenticated: getPermissions(this.mavo.element.getAttribute('authenticated-permissions')) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
+        authenticated: authenticatedPermissions,
+        unauthenticated: unauthenticatedPermissions
       }
 
       this.permissions.on(this.defaultPermissions.unauthenticated)
+
+      // INIT FIREBASE
+      let config = {
+        apiKey: apiKeyAttr,
+        authDomain: authDomainAttr,
+        databaseURL: databaseUrl,
+        storageBucket: storageBucketAttr
+      }
+
+      firebase.initializeApp(config)
+
+      this.key = this.mavo.id
+      this.db = firebase.database().ref(id)
+
+      // STORAGE
+
+      // Only allow file uploading if storageBucket is defined
+      if (storageBucketAttr) {
+        this.storage = firebase.storage().ref(id)
+
+        this.upload = function (file) {
+          let ref = this.storage.child(`${file.name}-${Date.now()}`)
+
+          return ref.put(file).then(() => {
+            return ref.getDownloadURL()
+          })
+        }
+      }
 
       // Firebase auth changes
       firebase.auth().onAuthStateChanged(user => {
@@ -35,6 +102,8 @@
       }, error => {
         this.mavo.error('Firebase: ' + error.message)
       })
+
+      // HELPER FUNCTIONS
 
       function getPermissions (attr) {
         if (attr) {
@@ -66,12 +135,8 @@
       }
       this.listeningOnValue = true
 
-      console.log('onChange')
-
       this.db.on('value', snapshot => {
         let doc = snapshot.val()
-
-        console.log('doc', doc)
 
         if (!doc || !doc._rev || doc._rev <= this.rev) {
           return
@@ -88,11 +153,11 @@
         let data = snapshot.val()
 
         if (!data) {
-          this.rev = 0
+          this.rev = 1
           return {}
         }
 
-        this.rev = data._rev
+        this.rev = data._rev || 1
         return data
       })
     },
@@ -101,16 +166,14 @@
       // TODO: How about conflicts?
 
       return this.db.transaction(currentData => {
-        let newRev = 0
+        this.rev = (this.rev || 0) + 1
 
         if (currentData && currentData._rev) {
-          newRev = currentData._rev + 1
+          this.rev = currentData._rev + 1
         }
 
-        this.rev = newRev
-
         return Object.assign(data, {
-          _rev: newRev
+          _rev: this.rev
         })
       })
     },
@@ -138,16 +201,6 @@
       })
     },
 
-    upload: function (file) {
-      this.storage = this.storage || firebase.storage().ref('mavo')
-
-      let ref = this.storage.child(`${file.name}-${Date.now()}`)
-
-      return ref.put(file).then(() => {
-        return ref.getDownloadURL()
-      })
-    },
-
     compareDocRevs: function (docA, docB) {
       // If b is newer return 1
 
@@ -167,7 +220,7 @@
     },
 
     static: {
-      test: value => value === 'firebase'
+      test: url => /^https:\/\/.*\.firebaseio\.com$/.test(url)
     }
   }))
 })()

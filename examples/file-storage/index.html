@@ -10,22 +10,14 @@
 
   <script src="../../../mavo-firebase/src/mavo-firebase.js"></script>
   <link rel="stylesheet" href="../../../mavo-examples/file-storage/style.css">
-
-  <script type="text/javascript">
-    firebase.initializeApp({
-      apiKey: 'AIzaSyC0ZpVmzrkQeXNgrKbQ81RzwW5uaK0eqy4',
-      authDomain: 'mavo-firebase-file-storage.firebaseapp.com',
-      databaseURL: 'https://mavo-firebase-file-storage.firebaseio.com',
-      projectId: 'mavo-firebase-file-storage',
-      storageBucket: 'mavo-firebase-file-storage.appspot.com',
-      messagingSenderId: '138628779635'
-    });
-  </script>
 </head>
 <body>
-  <main mv-app="todo"
-    mv-storage="firebase"
-    unauthenticated-permissions="read edit save">
+  <main mv-app="file-storage"
+    mv-storage="https://mavo-firebase-file-storage.firebaseio.com"
+    firebase-api-key="AIzaSyC0ZpVmzrkQeXNgrKbQ81RzwW5uaK0eqy4"
+    firebase-storage-bucket="mavo-firebase-file-storage.appspot.com"
+    unauthenticated-permissions="read edit save"
+    mv-autosave="0.001">
 
     <header>
       <h1>Image and video of the day!</h1>
@@ -38,6 +30,8 @@
     </div>
 
   </main>
+
+  <!--<script src="http://localhost:35729/livereload.js"></script>-->
 
 </body>
 </html>
