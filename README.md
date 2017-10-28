@@ -48,6 +48,25 @@ Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-k
 
 Your Mavo id will be used as name for the root object in database.
 
+## File uploading
+
+If you want use mavo-firebase to upload files you need to use a modified version of Mavo. ([Issue](https://github.com/mavoweb/mavo/issues/292))
+
+Change upload function in [elements.js](https://github.com/mavoweb/mavo/blob/master/src/elements.js) to this:
+
+```
+var upload = (file, name = file.name) => {
+  if (file && file.type.indexOf(type + "/") === 0) {
+    this.mavo.upload(file, path + "/" + name).then(url => {
+      mainInput.value = url;
+
+      this.mavo.inProgress = false;
+      $.fire(mainInput, "input");
+    });
+  }
+};
+```
+
 ## Setup Firebase
 
 Login or signup at https://console.firebase.google.com
