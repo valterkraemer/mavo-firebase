@@ -35,7 +35,7 @@
       let authenticatedPermissions = getPermissions(authenticatedPermissionsAttr) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
 
       // Use default permissions if unauthenticated-permissions isn't specified,
-      // permission 'firebase-auth-domain' has to be set if permission 'login' is used
+      // attribute 'firebase-auth-domain' has to be set if permission 'login' is used
       let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
       if (unauthenticatedPermissions) {
         if (!authDomainAttr && unauthenticatedPermissions.includes('login')) {
@@ -188,6 +188,7 @@
 
         return firebase.auth().signInWithPopup(provider).catch(error => {
           this.mavo.error('Firebase: ' + error.message)
+          return Promise.reject(error)
         })
       })
     },

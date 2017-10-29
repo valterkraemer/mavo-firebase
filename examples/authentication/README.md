@@ -1,6 +1,6 @@
 # High score (Authentication)
 
-![preview](assets/images/preview.jpg "Preview")
+![preview](../../../mavo-examples/authentication/assets/images/preview.jpg "Preview")
 
 [View Demo](https://valterkraemer.github.io/mavo-firebase/examples/authentication/)
 

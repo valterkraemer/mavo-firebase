@@ -41,10 +41,10 @@ Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-k
 
 #### Permission attributes
 
-| Attribute                     | Default                                 | Description                           |
-|:----------------------------- |:--------------------------------------- |:------------------------------------- |
-| `authenticated-permissions`   | `"read login"`                          | Permissions for unauthenticated users |
-| `unauthenticated-permissions` | `"read edit add delete save logout"`    | Permissions for authenticated users   |
+| Attribute                     | Default                                                     | Description                           |
+|:----------------------------- |:----------------------------------------------------------- |:------------------------------------- |
+| `authenticated-permissions`   | `read`, also `login` if `firebase-auth-domain` is specified | Permissions for unauthenticated users |
+| `unauthenticated-permissions` | `read edit add delete save logout`                          | Permissions for authenticated users   |
 
 Your Mavo id will be used as name for the root object in database.
 
