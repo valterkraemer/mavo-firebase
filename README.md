@@ -12,14 +12,17 @@ Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com
 
 ## Quick setup
 
-Add Firebase and mavo-firebase to the `<head>` of your HTML file.
+1. Get the newest version of mavo-firebase from the [release section](https://github.com/valterkraemer/mavo-firebase/releases).
+2. Add Firebase and mavo-firebase to the `<head>` of your HTML file.
 
-    <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
-    <script src="path/to/mavo-firebase.js"></script>
+```
+<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+<script src="path/to/mavo-firebase.js"></script>
+```
 
 **Tip:** *Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.*
 
-Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-key and `unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
+3. Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-key and `unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
 
 ```
 <main mv-app="todo"
