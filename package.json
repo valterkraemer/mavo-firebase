@@ -5,7 +5,7 @@
   "author": "Valter Kraemer",
   "license": "MIT",
   "scripts": {
-    "build": "babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.js --presets es2015 --source-maps & babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.min.js --presets es2015 --presets minify --source-maps"
+    "build": "babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.js --presets es2015 --source-maps & babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.min.js --presets es2015,minify --source-maps"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
