@@ -67,16 +67,21 @@
         storageBucket: storageBucketAttr
       }
 
-      firebase.initializeApp(config)
+      // Allow multiple firebase apps on the same page
+      if (window.firebaseAppNo) {
+        this.app = firebase.initializeApp(config, `app${window.firebaseAppNo++}`)
+      } else {
+        window.firebaseAppNo = 1
+        this.app = firebase.initializeApp(config)
+      }
 
-      this.key = this.mavo.id
-      this.db = firebase.database().ref(id)
+      this.db = this.app.database().ref(id)
 
       // STORAGE
 
       // Only allow file uploading if storageBucket is defined
       if (storageBucketAttr) {
-        this.storage = firebase.storage().ref(id)
+        this.storage = this.app.storage().ref(id)
 
         this.upload = function (file) {
           let ref = this.storage.child(`${file.name}-${Date.now()}`)
@@ -88,7 +93,7 @@
       }
 
       // Firebase auth changes
-      firebase.auth().onAuthStateChanged(user => {
+      this.app.auth().onAuthStateChanged(user => {
         if (!user) {
           return
         }
@@ -122,7 +127,7 @@
       }
       this.listeningOnStatus = true
 
-      firebase.database().ref('.info/connected').on('value', snap => {
+      this.app.database().ref('.info/connected').on('value', snap => {
         this.statusChangesCallbacks.forEach(callback => callback(snap.val()))
       })
     },
@@ -184,9 +189,9 @@
           return
         }
 
-        let provider = new firebase.auth.GoogleAuthProvider()
+        let provider = new this.app.auth.GoogleAuthProvider()
 
-        return firebase.auth().signInWithPopup(provider).catch(error => {
+        return this.app.auth().signInWithPopup(provider).catch(error => {
           this.mavo.error('Firebase: ' + error.message)
           return Promise.reject(error)
         })
@@ -194,7 +199,7 @@
     },
 
     logout: function () {
-      return firebase.auth().signOut().then(() => {
+      return this.app.auth().signOut().then(() => {
         // Sign-out successful.
         this.permissions.off(this.defaultPermissions.authenticated).on(this.defaultPermissions.unauthenticated)
       }).catch((error) => {
