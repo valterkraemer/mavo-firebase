@@ -170,13 +170,13 @@
     },
 
     store: function (data) {
-      // TODO: How about conflicts?
+      // Always override server with current data, even if conflict
 
       return this.db.transaction(currentData => {
-        this.rev = (this.rev || 0) + 1
-
-        if (currentData && currentData._rev) {
-          this.rev = currentData._rev + 1
+        if (currentData) {
+          this.rev = Number.isInteger(currentData._rev) ? currentData._rev + 1 : 1
+        } else {
+          this.rev = 1
         }
 
         return Object.assign(data, {
@@ -212,11 +212,11 @@
     compareDocRevs: function (docA, docB) {
       // If b is newer return 1
 
-      if (!docA || !docA._rev) {
+      if (!docA || !Number.isInteger(docA._rev)) {
         return 1
       }
 
-      if (!docB || !docB._rev) {
+      if (!docB || !Number.isInteger(docB._rev)) {
         return -1
       }
 
