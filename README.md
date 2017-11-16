@@ -43,6 +43,7 @@ Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com
 | `mv-firebase-api-key`            | Api-key (required)                      | `AdsfgDGFf-asdfGFDdfsdf5A-4ASFDgfhdf` |
 | `mv-firebase-auth-domain`        | Auth domain to enable login             | `projectId.firebaseapp.com`           |
 | `mv-firebase-storage-bucket`     | Storage bucket to enable file uploading | `bucket.appspot.com`                  |
+| `mv-server-push`                 | Push data from server on changes        |                                       |
 
 #### Permission attributes
 

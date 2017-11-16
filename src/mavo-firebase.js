@@ -43,7 +43,6 @@
       }
 
       this.statusChangesCallbacks = []
-      this.changesCallbacks = []
 
       // PERMISSIONS
       let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-unauthenticated-permissions')
@@ -110,6 +109,12 @@
         this.mavo.error('Firebase: ' + error.message)
       })
 
+      // Enable pushing data from server
+      let serverPushAttr = this.mavo.element.getAttribute('mv-server-push')
+      if (serverPushAttr !== null && serverPushAttr !== 'false') {
+        this.setListenForChanges(true)
+      }
+
       // HELPER FUNCTIONS
 
       function getPermissions (attr) {
@@ -134,25 +139,33 @@
       })
     },
 
-    onChange: function (callback) {
-      this.changesCallbacks.push(callback)
+    setListenForChanges: function (bool) {
+      if (bool) {
+        if (!this.listeningForChanges) {
+          this.db.on('value', snapshot => {
+            let doc = snapshot.val()
 
-      if (this.listeningOnValue) {
-        return
-      }
-      this.listeningOnValue = true
+            // Ignore if data is old
+            if (this.compareDocRevs({
+              _rev: this.rev
+            }, doc) !== 1) {
+              return
+            }
 
-      this.db.on('value', snapshot => {
-        let doc = snapshot.val()
+            this.rev = doc._rev
 
-        if (!doc || !doc._rev || doc._rev <= this.rev) {
-          return
+            this.onNewData(doc)
+          })
         }
+      } else {
+        this.db.off()
+      }
 
-        this.rev = doc._rev
+      this.listeningForChanges = bool
+    },
 
-        this.changesCallbacks.forEach(callback => callback(doc))
-      })
+    onNewData: function (data) {
+      return this.mavo.render(data)
     },
 
     load: function () {
@@ -170,8 +183,28 @@
     },
 
     store: function (data) {
-      // Always override server with current data, even if conflict
+      // Needed to make this.mavo.unsavedChanges work correctly
+      return Promise.resolve().then(() => {
+        this.storeData = data
 
+        // this.mavo.unsavedChanges needed because of https://github.com/mavoweb/mavo/issues/256
+        if (!this.mavo.unsavedChanges || this.storing) {
+          return
+        }
+
+        this.storing = true
+
+        return this.put().then(() => {
+          this.storing = false
+        })
+      })
+    },
+
+    put: function (data) {
+      data = this.storeData || data
+      delete this.storeData
+
+      // Overrides server with local data
       return this.db.transaction(currentData => {
         if (currentData) {
           this.rev = Number.isInteger(currentData._rev) ? currentData._rev + 1 : 1
@@ -182,6 +215,10 @@
         return Object.assign(data, {
           _rev: this.rev
         })
+      }).then(() => {
+        if (this.storeData) {
+          return this.put()
+        }
       })
     },
 
