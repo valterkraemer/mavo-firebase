@@ -23,11 +23,7 @@
 
       // Require firebase-api-key attribute
       if (!apiKeyAttr) {
-        // timeout is workaround for undefined error
-        setTimeout(() => {
-          this.mavo.error('Firebase: firebase-api-key attribute missing')
-        }, 0)
-        return
+        return this.mavo.error('Firebase: firebase-api-key attribute missing')
       }
 
       // PERMISSIONS
@@ -39,10 +35,7 @@
       let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
       if (unauthenticatedPermissions) {
         if (!authDomainAttr && unauthenticatedPermissions.includes('login')) {
-          setTimeout(() => {
-            this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
-          }, 0)
-          return
+          return this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
         }
       } else {
         if (authDomainAttr) {
