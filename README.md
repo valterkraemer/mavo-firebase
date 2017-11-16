@@ -1,8 +1,9 @@
 # Mavo-firebase
 
-A Firebase backend plugin for [Mavo](https://mavo.io).
+A Firebase backend plugin for [Mavo](https://mavo.io) that allows realtime data.
 
-Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that enables changes to be pushed from the server and offline support.
+
+Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that caches data and makes Mavo continue to work when going offline.
 
 **Note**: Does not work well with Mavo 0.1.4 nor earlier. You may need to use the dev version of Mavo.
 
@@ -14,43 +15,71 @@ Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com
 
 ## Quick setup
 
-1. Get the newest version of mavo-firebase from the [release section](https://github.com/valterkraemer/mavo-firebase/releases).
-2. Add Firebase and mavo-firebase to the `<head>` of your HTML file.
-
-```
-<script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
-<script src="path/to/mavo-firebase.js"></script>
-```
+1. Add Firebase of your HTML file and initialize it.
 
 **Tip:** *Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.*
 
-3. Set `mv-storage` to your Firebase database url, `mv-firebase-api-key` to your api-key and `mv-unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
+```
+<script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "*** apiKey ***",
+    authDomain: "*** authDomain ***",
+    databaseURL: "*** databaseURL ***",
+    projectId: "*** projectId ***",
+    storageBucket: "*** storageBucket ***",
+    messagingSenderId: "*** messagingSenderId ***"
+  }
+  firebase.initializeApp(config)
+</script>
+```
+
+2. Get the newest version of mavo-firebase from the [release section](https://github.com/valterkraemer/mavo-firebase/releases). And add it after the firebase scripts.
+```
+<script src="path/to/mavo-firebase.js"></script>
+```
+
+3. Set the following attributes on the Mavo root element (same element as `mv-app`):
+- `mv-storage="firebase"`
+- `mv-unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
+- `mv-server-push` if you want server pushed updates (Open the page in multiple windows and they will be kept in sync).
 
 ```
 <main mv-app="todo"
-  mv-storage="https://databaseName.firebaseio.com"
-  mv-firebase-api-key="apiKey"
-  mv-unauthenticated-permissions="read edit save">
+  mv-storage="firebase"
+  mv-unauthenticated-permissions="read edit save"
+  mv-server-push="true"
+  mv-autosave="0">
 
   ...
 ```
 
 ## Attributes
 
-| Attribute                        | Description                             | Example                               |
-|:---------------------------------|:--------------------------------------- |:------------------------------------- |
-| `mv-storage`                     | Database url (required)                 | `https://databaseName.firebaseio.com` |
-| `mv-firebase-api-key`            | Api-key (required)                      | `AdsfgDGFf-asdfGFDdfsdf5A-4ASFDgfhdf` |
-| `mv-firebase-auth-domain`        | Auth domain to enable login             | `projectId.firebaseapp.com`           |
-| `mv-firebase-storage-bucket`     | Storage bucket to enable file uploading | `bucket.appspot.com`                  |
-| `mv-server-push`                 | Push data from server on changes        |                                       |
+| Attribute                        | Description
+|:---------------------------------|:------------------------------------------------------------ |
+| `mv-storage`                     | **Required** Should be set to `firebase`.                    |
+| `mv-server-push`                 | Update data in browser if there is a change in the database. |
+
+#### Initialize Firebase using attributes
+
+You can use attributes instead of script tag to initializing Firebase. This way you can use multiple Firebase databases on same page.
+
+| Attribute                        | Description
+|:---------------------------------|:-------------------------------------------------------------------------- |
+| `mv-storage`                     | **Required** Database url. E.g. `https://databaseName.firebaseio.com`      |
+| `mv-firebase-api-key`            | **Required** Api key. E.g. `AIzaSyD3-4ZXfsdDFGGC7Fdg-ean0VZ36bwoEA`        |
+| `mv-firebase-auth-domain`        | Auth domain, needed to enable login. E.g. `projectId.firebaseapp.com`      |
+| `mv-firebase-storage-bucket`     | Storage bucket, needed to enable file uploading E.g. `bucket.appspot.com`  |
+| `mv-server-push`                 | Push data from server when there are changes.                              |
 
 #### Permission attributes
 
-| Attribute                        | Default                                                     | Description                           |
-|:-------------------------------- |:----------------------------------------------------------- |:------------------------------------- |
-| `mv-unauthenticated-permissions` | `read`, also `login` if `firebase-auth-domain` is specified | Permissions for unauthenticated users |
-| `mv-authenticated-permissions`   | `read edit add delete save logout`                          | Permissions for authenticated users   |
+| Attribute                        | Default                                            | Description                           |
+|:-------------------------------- |:-------------------------------------------------- |:------------------------------------- |
+| `mv-unauthenticated-permissions` | `read`, also `login` if `authDomain` is specified. | Permissions for unauthenticated users |
+| `mv-authenticated-permissions`   | `read edit add delete save logout`                 | Permissions for authenticated users   |
 
 Your Mavo id will be used as name for the root object in database.
 
