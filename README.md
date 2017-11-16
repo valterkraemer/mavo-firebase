@@ -4,6 +4,8 @@ A Firebase backend plugin for [Mavo](https://mavo.io).
 
 Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that enables changes to be pushed from the server and offline support.
 
+**Note**: Does not work well with Mavo 0.1.4 nor earlier. You may need to use the dev version of Mavo.
+
 ## Examples
 
 - [To-do list](https://github.com/valterkraemer/mavo-firebase/tree/master/examples/todo) - ([DEMO](https://valterkraemer.github.io/mavo-firebase/examples/todo/))
