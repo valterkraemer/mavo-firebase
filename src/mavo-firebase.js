@@ -14,12 +14,12 @@
 
       // ATTRIBUTES
 
-      let apiKeyAttr = this.mavo.element.getAttribute('firebase-api-key')
-      let authDomainAttr = this.mavo.element.getAttribute('firebase-auth-domain')
-      let storageBucketAttr = this.mavo.element.getAttribute('firebase-storage-bucket')
+      let apiKeyAttr = this.mavo.element.getAttribute('mv-firebase-api-key')
+      let authDomainAttr = this.mavo.element.getAttribute('mv-firebase-auth-domain')
+      let storageBucketAttr = this.mavo.element.getAttribute('mv-firebase-storage-bucket')
 
-      let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('unauthenticated-permissions')
-      let authenticatedPermissionsAttr = this.mavo.element.getAttribute('authenticated-permissions')
+      let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-unauthenticated-permissions')
+      let authenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-authenticated-permissions')
 
       // Require firebase-api-key attribute
       if (!apiKeyAttr) {

@@ -22,32 +22,32 @@ Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com
 
 **Tip:** *Check out the [Setup Firebase](#setup-firebase) section to find out how to set up a Firebase database.*
 
-3. Set `mv-storage` to your Firebase database url, `firebase-api-key` to your api-key and `unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
+3. Set `mv-storage` to your Firebase database url, `mv-firebase-api-key` to your api-key and `mv-unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
 
 ```
 <main mv-app="todo"
   mv-storage="https://databaseName.firebaseio.com"
-  firebase-api-key="apiKey"
-  unauthenticated-permissions="read edit save">
+  mv-firebase-api-key="apiKey"
+  mv-unauthenticated-permissions="read edit save">
 
   ...
 ```
 
 ## Attributes
 
-| Attribute                     | Description                             | Example                               |
-|:------------------------------|:--------------------------------------- |:------------------------------------- |
-| `mv-storage`                  | Database url (required)                 | `https://databaseName.firebaseio.com` |
-| `firebase-api-key`            | Api-key (required)                      | `AdsfgDGFf-asdfGFDdfsdf5A-4ASFDgfhdf` |
-| `firebase-auth-domain`        | Auth domain to enable login             | `projectId.firebaseapp.com`           |
-| `firebase-storage-bucket`     | Storage bucket to enable file uploading | `bucket.appspot.com`                  |
+| Attribute                        | Description                             | Example                               |
+|:---------------------------------|:--------------------------------------- |:------------------------------------- |
+| `mv-storage`                     | Database url (required)                 | `https://databaseName.firebaseio.com` |
+| `mv-firebase-api-key`            | Api-key (required)                      | `AdsfgDGFf-asdfGFDdfsdf5A-4ASFDgfhdf` |
+| `mv-firebase-auth-domain`        | Auth domain to enable login             | `projectId.firebaseapp.com`           |
+| `mv-firebase-storage-bucket`     | Storage bucket to enable file uploading | `bucket.appspot.com`                  |
 
 #### Permission attributes
 
-| Attribute                     | Default                                                     | Description                           |
-|:----------------------------- |:----------------------------------------------------------- |:------------------------------------- |
-| `unauthenticated-permissions` | `read`, also `login` if `firebase-auth-domain` is specified | Permissions for unauthenticated users |
-| `authenticated-permissions`   | `read edit add delete save logout`                          | Permissions for authenticated users   |
+| Attribute                        | Default                                                     | Description                           |
+|:-------------------------------- |:----------------------------------------------------------- |:------------------------------------- |
+| `mv-unauthenticated-permissions` | `read`, also `login` if `firebase-auth-domain` is specified | Permissions for unauthenticated users |
+| `mv-authenticated-permissions`   | `read edit add delete save logout`                          | Permissions for authenticated users   |
 
 Your Mavo id will be used as name for the root object in database.
 
