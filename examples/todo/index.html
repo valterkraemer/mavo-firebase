@@ -10,13 +10,25 @@
 
   <script src="../../../mavo-firebase/src/mavo-firebase.js"></script>
   <link rel="stylesheet" href="../../../mavo-examples/todo/style.css">
+
+  <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyD3-4ZXpNZkWbdlC7Fdg-ean0VZ36bwoEA",
+    authDomain: "mavo-firebase-todo-d0311.firebaseapp.com",
+    databaseURL: "https://mavo-firebase-todo-d0311.firebaseio.com",
+    projectId: "mavo-firebase-todo-d0311",
+    storageBucket: "mavo-firebase-todo-d0311.appspot.com",
+    messagingSenderId: "681421141712"
+  };
+  firebase.initializeApp(config);
+</script>
 </head>
 <body>
 
   <main mv-app="todo-firebase"
-    mv-storage="https://mavo-firebase-todo-d0311.firebaseio.com"
-    mv-firebase-api-key="AIzaSyD3-4ZXpNZkWbdlC7Fdg-ean0VZ36bwoEA"
-    mv-unauthenticated-permissions="read edit save"
+    mv-storage="firebase"
+    mv-unauthenticated-permissions="read edit save login"
     mv-autosave="0">
 
     <header>

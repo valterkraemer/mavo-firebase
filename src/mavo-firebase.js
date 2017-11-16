@@ -7,26 +7,47 @@
     extends: Mavo.Backend,
     id: 'Firebase',
     constructor: function (databaseUrl) {
+      let id = this.mavo.id || 'mavo'
+      let config = {}
+
+      let initUsingAttributes = /^https:\/\/.*\.firebaseio\.com$/.test(databaseUrl)
+
+      // Init Firebase using attributes
+      if (initUsingAttributes) {
+        config = {
+          apiKey: this.mavo.element.getAttribute('mv-firebase-api-key'),
+          authDomain: this.mavo.element.getAttribute('mv-firebase-auth-domain'),
+          databaseURL: databaseUrl,
+          storageBucket: this.mavo.element.getAttribute('mv-firebase-storage-bucket')
+        }
+
+        if (!config.apiKey) {
+          return this.mavo.error('Firebase: mv-firebase-api-key attribute missing')
+        }
+
+        // Support using multiple apps on the same page
+        if (!firebase.apps.length) {
+          this.app = firebase.initializeApp(config)
+        } else {
+          this.app = firebase.initializeApp(config, `app${firebase.apps.length}`)
+        }
+      } else {
+        // Init firebase using script
+        config = firebase.default.app().options
+
+        if (!config.apiKey) {
+          return this.mavo.error('Firebase: apiKey missing from config')
+        }
+
+        this.app = firebase.default
+      }
+
       this.statusChangesCallbacks = []
       this.changesCallbacks = []
 
-      let id = this.mavo.id || 'mavo'
-
-      // ATTRIBUTES
-
-      let apiKeyAttr = this.mavo.element.getAttribute('mv-firebase-api-key')
-      let authDomainAttr = this.mavo.element.getAttribute('mv-firebase-auth-domain')
-      let storageBucketAttr = this.mavo.element.getAttribute('mv-firebase-storage-bucket')
-
+      // PERMISSIONS
       let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-unauthenticated-permissions')
       let authenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-authenticated-permissions')
-
-      // Require firebase-api-key attribute
-      if (!apiKeyAttr) {
-        return this.mavo.error('Firebase: firebase-api-key attribute missing')
-      }
-
-      // PERMISSIONS
 
       let authenticatedPermissions = getPermissions(authenticatedPermissionsAttr) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
 
@@ -34,11 +55,15 @@
       // attribute 'firebase-auth-domain' has to be set if permission 'login' is used
       let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
       if (unauthenticatedPermissions) {
-        if (!authDomainAttr && unauthenticatedPermissions.includes('login')) {
-          return this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
+        if (!config.authDomain && unauthenticatedPermissions.includes('login')) {
+          if (initUsingAttributes) {
+            return this.mavo.error('Firebase: authDomain missing from config (needed if permission \'login\' is specified)')
+          } else {
+            return this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
+          }
         }
       } else {
-        if (authDomainAttr) {
+        if (config.authDomain) {
           unauthenticatedPermissions = ['read', 'login']
         } else {
           unauthenticatedPermissions = ['read']
@@ -52,28 +77,12 @@
 
       this.permissions.on(this.defaultPermissions.unauthenticated)
 
-      // INIT FIREBASE
-      let config = {
-        apiKey: apiKeyAttr,
-        authDomain: authDomainAttr,
-        databaseURL: databaseUrl,
-        storageBucket: storageBucketAttr
-      }
-
-      // Allow multiple firebase apps on the same page
-      if (window.firebaseAppNo) {
-        this.app = firebase.initializeApp(config, `app${window.firebaseAppNo++}`)
-      } else {
-        window.firebaseAppNo = 1
-        this.app = firebase.initializeApp(config)
-      }
-
       this.db = this.app.database().ref(id)
 
       // STORAGE
 
       // Only allow file uploading if storageBucket is defined
-      if (storageBucketAttr) {
+      if (config.storageBucket) {
         this.storage = this.app.storage().ref(id)
 
         this.upload = function (file) {
@@ -219,7 +228,7 @@
     },
 
     static: {
-      test: url => /^https:\/\/.*\.firebaseio\.com$/.test(url)
+      test: url => /^(firebase|https:\/\/.*\.firebaseio\.com)$/.test(url)
     }
   }))
 })()
