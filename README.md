@@ -2,10 +2,9 @@
 
 A Firebase backend plugin for [Mavo](https://mavo.io) that allows realtime data.
 
-
 Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that caches data and makes Mavo continue to work when going offline.
 
-**Note**: Does not work well with Mavo 0.1.4 nor earlier. You may need to use the dev version of Mavo.
+Requires Mavo version 0.1.5 or higher, tested with 0.1.5.
 
 ## Examples
 
@@ -64,7 +63,7 @@ Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com
 
 #### Initialize Firebase using attributes
 
-You can use attributes instead of script tag to initializing Firebase. This way you can use multiple Firebase databases on same page.
+You can use attributes instead of script tag to initializing Firebase. This way you can have multiple Mavo applications on the same page using different Firebase databases.
 
 | Attribute                        | Description
 |:---------------------------------|:-------------------------------------------------------------------------- |
