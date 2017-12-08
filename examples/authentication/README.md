@@ -4,9 +4,7 @@
 
 [View Demo](https://valterkraemer.github.io/mavo-firebase/examples/authentication/)
 
-This example show a high score list where you have to log in to be able to edit it. Because editing is only done by the author the mv-bar is hidden. To login one need to add `?login` to the end of the url (https://valterkraemer.github.io/mavo-firebase/examples/authentication?login).
-
-The browser will probably block sign-in popup so you have to allow popups for domain.
+This example show a high score list where you have to log in to be able to edit it.
 
 ## Setup Firebase
 
