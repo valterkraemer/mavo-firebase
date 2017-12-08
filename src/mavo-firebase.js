@@ -228,7 +228,7 @@
           return
         }
 
-        let provider = new this.app.auth.GoogleAuthProvider()
+        let provider = new firebase.auth.GoogleAuthProvider()
 
         return this.app.auth().signInWithPopup(provider).catch(error => {
           this.mavo.error('Firebase: ' + error.message)
