@@ -2,9 +2,12 @@
 
 A Firebase backend plugin for [Mavo](https://mavo.io) that allows realtime data.
 
-Mavo-firebase is made to work with [mavo-offline-interceptor](https://github.com/valterkraemer/mavo-offline-interceptor) that caches data and makes Mavo continue to work when going offline.
+Mavo-firebase is made to work with [mavo-offline](https://github.com/valterkraemer/mavo-offline) that caches data and makes Mavo continue to work when going offline.
 
-Requires Mavo version 0.1.5 or higher, tested with 0.1.5.
+Requirements:
+
+- [Mavo](https://mavo.io/get/), tested with v0.1.5
+- [Firebase Javascript SDK](https://github.com/firebase/firebase-js-sdk), tested with v4.6.2
 
 ## Examples
 
