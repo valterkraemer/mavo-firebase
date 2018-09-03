@@ -1,7 +1,6 @@
 (function () {
   const $ = window.Bliss
   const Mavo = window.Mavo
-  const firebase = window.firebase
 
   Mavo.Backend.register($.Class({
     extends: Mavo.Backend,
@@ -10,114 +9,119 @@
       let id = this.mavo.id || 'mavo'
       let config = {}
 
-      let initUsingAttributes = /^https:\/\/.*\.firebaseio\.com$/.test(databaseUrl)
+      $.include(window.firebase, 'https://www.gstatic.com/firebasejs/4.6.2/firebase.js')
+        .then(() => {
+          this.firebase = window.firebase
 
-      // Init Firebase using attributes
-      if (initUsingAttributes) {
-        config = {
-          apiKey: this.mavo.element.getAttribute('mv-firebase-api-key'),
-          authDomain: this.mavo.element.getAttribute('mv-firebase-auth-domain'),
-          databaseURL: databaseUrl,
-          storageBucket: this.mavo.element.getAttribute('mv-firebase-storage-bucket')
-        }
+          let initUsingAttributes = /^https:\/\/.*\.firebaseio\.com$/.test(databaseUrl)
 
-        if (!config.apiKey) {
-          return this.mavo.error('Firebase: mv-firebase-api-key attribute missing')
-        }
-
-        // Support using multiple apps on the same page
-        if (!firebase.apps.length) {
-          this.app = firebase.initializeApp(config)
-        } else {
-          this.app = firebase.initializeApp(config, `app${firebase.apps.length}`)
-        }
-      } else {
-        // Init firebase using script
-        config = firebase.default.app().options
-
-        if (!config.apiKey) {
-          return this.mavo.error('Firebase: apiKey missing from config')
-        }
-
-        this.app = firebase.default
-      }
-
-      this.statusChangesCallbacks = []
-
-      // PERMISSIONS
-      let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-unauthenticated-permissions')
-      let authenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-authenticated-permissions')
-
-      let authenticatedPermissions = getPermissions(authenticatedPermissionsAttr) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
-
-      // Use default permissions if unauthenticated-permissions isn't specified,
-      // attribute 'firebase-auth-domain' has to be set if permission 'login' is used
-      let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
-      if (unauthenticatedPermissions) {
-        if (!config.authDomain && unauthenticatedPermissions.includes('login')) {
+          // Init Firebase using attributes
           if (initUsingAttributes) {
-            return this.mavo.error('Firebase: authDomain missing from config (needed if permission \'login\' is specified)')
+            config = {
+              apiKey: this.mavo.element.getAttribute('mv-firebase-api-key'),
+              authDomain: this.mavo.element.getAttribute('mv-firebase-auth-domain'),
+              databaseURL: databaseUrl,
+              storageBucket: this.mavo.element.getAttribute('mv-firebase-storage-bucket')
+            }
+
+            if (!config.apiKey) {
+              return this.mavo.error('Firebase: mv-firebase-api-key attribute missing')
+            }
+
+            // Support using multiple apps on the same page
+            if (!this.firebase.apps.length) {
+              this.app = this.firebase.initializeApp(config)
+            } else {
+              this.app = this.firebase.initializeApp(config, `app${this.firebase.apps.length}`)
+            }
           } else {
-            return this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
+            // Init firebase using script
+            config = this.firebase.default.app().options
+
+            if (!config.apiKey) {
+              return this.mavo.error('Firebase: apiKey missing from config')
+            }
+
+            this.app = this.firebase.default
           }
-        }
-      } else {
-        if (config.authDomain) {
-          unauthenticatedPermissions = ['read', 'login']
-        } else {
-          unauthenticatedPermissions = ['read']
-        }
-      }
 
-      this.defaultPermissions = {
-        authenticated: authenticatedPermissions,
-        unauthenticated: unauthenticatedPermissions
-      }
+          this.statusChangesCallbacks = []
 
-      this.permissions.on(this.defaultPermissions.unauthenticated)
+          // PERMISSIONS
+          let unauthenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-unauthenticated-permissions')
+          let authenticatedPermissionsAttr = this.mavo.element.getAttribute('mv-authenticated-permissions')
 
-      this.db = this.app.database().ref(id)
+          let authenticatedPermissions = getPermissions(authenticatedPermissionsAttr) || ['read', 'edit', 'add', 'delete', 'save', 'logout']
 
-      // STORAGE
+          // Use default permissions if unauthenticated-permissions isn't specified,
+          // attribute 'firebase-auth-domain' has to be set if permission 'login' is used
+          let unauthenticatedPermissions = getPermissions(unauthenticatedPermissionsAttr)
+          if (unauthenticatedPermissions) {
+            if (!config.authDomain && unauthenticatedPermissions.includes('login')) {
+              if (initUsingAttributes) {
+                return this.mavo.error('Firebase: authDomain missing from config (needed if permission \'login\' is specified)')
+              } else {
+                return this.mavo.error('Firebase: firebase-auth-domain attribute missing (needed if permission \'login\' is specified)')
+              }
+            }
+          } else {
+            if (config.authDomain) {
+              unauthenticatedPermissions = ['read', 'login']
+            } else {
+              unauthenticatedPermissions = ['read']
+            }
+          }
 
-      // Only allow file uploading if storageBucket is defined
-      if (config.storageBucket) {
-        this.storage = this.app.storage().ref(id)
+          this.defaultPermissions = {
+            authenticated: authenticatedPermissions,
+            unauthenticated: unauthenticatedPermissions
+          }
 
-        this.upload = function (file) {
-          let ref = this.storage.child(`${file.name}-${Date.now()}`)
+          this.permissions.on(this.defaultPermissions.unauthenticated)
 
-          return ref.put(file).then(() => {
-            return ref.getDownloadURL()
+          this.db = this.app.database().ref(id)
+
+          // STORAGE
+
+          // Only allow file uploading if storageBucket is defined
+          if (config.storageBucket) {
+            this.storage = this.app.storage().ref(id)
+
+            this.upload = function (file) {
+              let ref = this.storage.child(`${file.name}-${Date.now()}`)
+
+              return ref.put(file).then(() => {
+                return ref.getDownloadURL()
+              })
+            }
+          }
+
+          // Firebase auth changes
+          this.app.auth().onAuthStateChanged(user => {
+            if (!user) {
+              return
+            }
+
+            this.permissions.off(this.defaultPermissions.unauthenticated).on(this.defaultPermissions.authenticated)
+            this.user = {
+              username: user.email,
+              name: user.displayName,
+              avatar: user.photoURL
+            }
+          }, error => {
+            this.mavo.error('Firebase: ' + error.message)
           })
-        }
-      }
 
-      // Firebase auth changes
-      this.app.auth().onAuthStateChanged(user => {
-        if (!user) {
-          return
-        }
-
-        this.permissions.off(this.defaultPermissions.unauthenticated).on(this.defaultPermissions.authenticated)
-        this.user = {
-          username: user.email,
-          name: user.displayName,
-          avatar: user.photoURL
-        }
-      }, error => {
-        this.mavo.error('Firebase: ' + error.message)
-      })
-
-      // Enable pushing data from server
-      let serverPushAttr = this.mavo.element.getAttribute('mv-server-push')
-      if (serverPushAttr !== null && serverPushAttr !== 'false') {
-        this.setListenForChanges(true)
-      }
+          // Enable pushing data from server
+          let serverPushAttr = this.mavo.element.getAttribute('mv-server-push')
+          if (serverPushAttr !== null && serverPushAttr !== 'false') {
+            this.setListenForChanges(true)
+          }
+        })
 
       // HELPER FUNCTIONS
 
-      function getPermissions (attr) {
+      function getPermissions(attr) {
         if (attr) {
           return attr.split(/\s+/)
         } else if (attr === '') {
@@ -147,8 +151,8 @@
 
             // Ignore if data is old
             if (this.compareDocRevs({
-              _rev: this.rev
-            }, doc) !== 1) {
+                _rev: this.rev
+              }, doc) !== 1) {
               return
             }
 
@@ -228,7 +232,7 @@
           return
         }
 
-        let provider = new firebase.auth.GoogleAuthProvider()
+        let provider = new this.firebase.auth.GoogleAuthProvider()
 
         return this.app.auth().signInWithPopup(provider).catch(error => {
           this.mavo.error('Firebase: ' + error.message)

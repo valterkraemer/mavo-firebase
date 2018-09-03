@@ -37,18 +37,15 @@ Requirements:
 </script>
 ```
 
-2. Get the newest version of mavo-firebase from the [release section](https://github.com/valterkraemer/mavo-firebase/releases). And add it after the firebase scripts.
-```
-<script src="path/to/mavo-firebase.js"></script>
-```
-
-3. Set the following attributes on the Mavo root element (same element as `mv-app`):
+2. Set the following attributes on the Mavo root element (same element as `mv-app`):
+- `mv-plugins="firebase"`
 - `mv-storage="firebase"`
 - `mv-unauthenticated-permissions="read edit save"` if you want unauthenticated users to be able to edit and save.
 - `mv-server-push` if you want server pushed updates (Open the page in multiple windows and they will be kept in sync).
 
 ```
 <main mv-app="todo"
+  mv-plugins="firebase"
   mv-storage="firebase"
   mv-unauthenticated-permissions="read edit save"
   mv-server-push="true"

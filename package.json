@@ -8,8 +8,9 @@
     "build": "babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.js --presets es2015 --source-maps & babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.min.js --presets es2015,minify --source-maps"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-minify": "^0.2.0"
+    "@babel/core": "7.0.0",
+    "@babel/polyfill": "7.0.0",
+    "@babel/preset-env": "7.0.0",
+    "uglify-js": "3.4.9"
   }
 }
