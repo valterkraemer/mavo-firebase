@@ -8,10 +8,7 @@ const fs = require('fs')
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const files = [
-  //'./src/firebase.js',
-  './src/mavo-firebase.js'
-]
+const FILE_PATH = './src/mavo-firebase.js'
 
 run()
   .catch(err => {
@@ -19,22 +16,15 @@ run()
   })
 
 async function run() {
-  const results = await Promise.all(files.map(async file => {
-    const result = await readFile(file, 'utf8')
+  const result = await readFile(FILE_PATH, 'utf8')
 
-    return babel.transformAsync(result, {
-      filename: file
-    })
-  }))
-
-  // console.log('min', results[1].code)
-
-  const obj = {}
-  files.forEach((file, index) => {
-    obj[file] = results[index].code
+  const es5 = await babel.transformAsync(result, {
+    filename: FILE_PATH
   })
 
-  const min = UglifyJS.minify(obj, {
+  const min = UglifyJS.minify({
+    [FILE_PATH]: es5.code
+  }, {
     sourceMap: true
   })
 
