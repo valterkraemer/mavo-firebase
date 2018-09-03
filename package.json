@@ -4,9 +4,6 @@
   "description": "Firebase plugin for Mavo",
   "author": "Valter Kraemer",
   "license": "MIT",
-  "scripts": {
-    "build": "babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.js --presets es2015 --source-maps & babel ./src/mavo-firebase.js -o ./dist/mavo-firebase.min.js --presets es2015,minify --source-maps"
-  },
   "devDependencies": {
     "@babel/core": "7.0.0",
     "@babel/preset-env": "7.0.0",
