@@ -6,7 +6,7 @@ Mavo-firebase is made to work with [mavo-offline](https://github.com/valterkraem
 
 Requirements:
 
-- [Mavo](https://mavo.io/get/), tested with v0.1.5
+- [Mavo](https://mavo.io/get/), tested with v0.1.6
 - [Firebase Javascript SDK](https://github.com/firebase/firebase-js-sdk), tested with v4.6.2
 
 ## Examples
