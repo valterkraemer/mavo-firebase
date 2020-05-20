@@ -269,7 +269,7 @@
     },
 
     static: {
-      test: url => /^(firebase|https:\/\/.*\.firebaseio\.com)$/.test(url)
+      test: url => /^(firebase|https:\/\/.*\.firebaseio\.com\/?)$/.test(url)
     }
   }))
 })()
